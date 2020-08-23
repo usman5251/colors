@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    
+    <!-- PouchDB -->
+    <script src="pouchdb-7.2.1.js"></script>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            // get time and date
+            var today = new Date();
+            var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+            //sync databases
+            var localDB = new PouchDB('colors')
+            var remoteDB = new PouchDB('http://ec2-3-85-5-117.compute-1.amazonaws.com:5984/colors');
+            localDB.sync(remoteDB).on('complete', function () {
+            console.log('Yay, we are in sync!')
+            }).on('error', function (err) {
+            console.log('Error while syncing database')
+            });
+
+            //set value for barcode
+            document.querySelector('#barcode').value = (new Date()).getTime();
+
+            //custom field
+            ele = document.querySelector('#size');
+            ele.addEventListener('change', () => {
+                if (ele.value == 'Custom') {
+                    document.querySelector('#customsize').style.display = 'flex';
+                } else {
+                    document.querySelector('#customsize').style.display = 'none';
+                }
+            });
+
+            //upload product
+            document.querySelector("#addbtn").addEventListener('click', () => {
+                var barcode = document.querySelector('#barcode').value;
+                var name = document.querySelector('#pname').value;
+                var sku = document.querySelector('#sku').value;
+                var stock = document.querySelector('#stock').value;
+                var color = document.querySelector('#color').value;
+                var cost = document.querySelector('#cost').value;
+                var price = document.querySelector('#saleprice').value;
+                if (document.querySelector('#size').value == 'Custom') {
+                    var size = document.querySelector('#customsizeval').value;
+                } else {
+                    var size = document.querySelector('#size').value;
+                }
+                if (barcode == '' || name == '' || sku == '' || stock == '' || color == '' || cost == '' || price == '' || size == '') {
+                    alert("fiends can not be empty");
+                    return;
+                }
+                var doc = {
+                "_id": `${barcode}`,
+                "name": `${name}`,
+                "sku": `${sku}`,
+                "stock": `${stock}`,
+                "color": `${color}`,
+                "cost": `${cost}`,
+                "price": `${price}`,
+                "totalsold": 0,
+                "dateadded": `${date}`,
+                "size": `${size}`
+                };
+                console.log(doc);
+                try {
+                    localDB.put(doc);
+                    alert("product added successfully")
+                }
+                catch(err) {
+                    alert("error during product update")
+                }
+                
+                
+            });
+
+        });
+    </script>
+</head>
+
+<body>
+    <div class="container"  style="padding-bottom: 20px;">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">POS</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav">
+                <li class="nav-item active">
+                  <a class="nav-link disabled" href="#">Dashboard <span class="sr-only">disabled</span></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Add stock</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="Inventory.html">Inventory</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#">Disabled</a>
+                </li>
+              </ul>
+            </div>
+          </nav>
+    </div>
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col">
+                <form id='addform'> 
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-2 col-form-label">Barcode</label>
+                        <div class="col">
+                            <input type="number" class="form-control" id="barcode" placeholder="Barcode">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Name</label>
+                    <div class="col">
+                        <input type="text" class="form-control" id="pname" placeholder="Name">
+                    </div>
+                    </div>
+                    <div class="form-group row">
+                    <label for="inputPassword3" class="col-sm-2 col-form-label">SKU</label>
+                    <div class="col">
+                        <input type="text" class="form-control" id="sku" placeholder="SKU">
+                    </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputPassword3" class="col-sm-2 col-form-label">Stock</label>
+                        <div class="col">
+                        <input type="number" class="form-control" id="stock" placeholder="Enter stock">
+                        </div>
+                    </div>
+                    <div class="form-group row" >
+                        <label for="color" class="col-sm-2 col-form-label">Select color</label>
+                        <div class="col">
+                        <select class="form-control" id="color" >
+                          <option>Red</option>
+                          <option>Blue</option>
+                          <option>Green</option>
+                          <option>Yellow</option>
+                          <option>Purple</option>
+                          <option>Maroon</option>
+                          <option>White</option>
+                          <option>Seagreen</option>
+                          <option>Multi</option>
+                          <option>Brown</option>
+                          <option>Fawn</option>
+                          <option>Pink</option>
+                          <option>Navy Blue</option>
+                          <option>Gray</option>
+                          <option>Black</option>
+
+                        </select>
+                        </div>
+                    </div>
+                    <div class="form-group row" >
+                        <label for="color" class="col-sm-2 col-form-label">Select size</label>
+                        <div class="col">
+                        <select class="form-control" id="size" >
+                          <option>Small</option>
+                          <option>Medium</option>
+                          <option>Large</option>
+                          <option>XL</option>
+                          <option>Custom</option>
+                        </select>
+                        </div>
+                    </div>
+                    <div class="form-group row" id="customsize" style="display: none;">
+                        <label for="inputPassword3" class="col-sm-2 col-form-label">Custom size</label>
+                        <div class="col">
+                        <input type="text" class="form-control" id="customsizeval" placeholder="Custom size">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputPassword3" class="col-sm-2 col-form-label">Cost</label>
+                        <div class="col">
+                        <input type="number" class="form-control" id="cost" placeholder="Cost Price">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputPassword3" class="col-sm-2 col-form-label">Sale Price</label>
+                        <div class="col">
+                        <input type="number" class="form-control" id="saleprice" placeholder="Price">
+                        </div>
+                    </div>
+                    <div class="form-group row justify-content-center">
+                        <button type="button" class="btn btn-primary" id="addbtn">Add</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+   
+    
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>

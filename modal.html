@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- PouchDB -->
+    <script src="pouchdb-7.2.1.js"></script>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            // get time and date
+            var liste;
+            var today = new Date();
+            var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+            //sync databases
+            var localDB = new PouchDB('colors')
+            var remoteDB = new PouchDB('http://ec2-3-85-5-117.compute-1.amazonaws.com:5984/colors');
+            localDB.sync(remoteDB).on('complete', function () {
+            console.log('Yay, we are in sync!')
+            }).on('error', function (err) {
+            console.log('Error while syncing database')
+            });
+
+            localDB.allDocs({include_docs: true}, function(err, docs) {
+            if (err) {
+            return console.log(err);
+            } else {
+            liste = docs.rows;
+            console.log(liste)
+                for (var i = 0; i < liste.length; i++) {
+                    console.log(liste[i].doc.name);
+                    name = liste[i].doc.name;
+                    barcode = liste[i].id;
+                    stock = liste[i].doc.stock;
+                    var table = `<tr><th scope="row">${i+1}</th><td>${barcode}</td><td>${name}</td><td>${stock}</td><td><a class="btn" href="#"><i class="fa fa-plus"></i></a> <a class="btn" href="#"><i class="fa fa-minus"></i></a> <a class="btn" href="#"><i class="fa fa-trash"></i></a> <a class="btn" href="#"><i class="fa fa-pencil"></i></a></td></tr>`;
+                    document.querySelector('#details').innerHTML += table;
+                }
+            }
+            });
+            $('#myModal').on('shown.bs.modal', function () {
+                $('#myInput').trigger('focus')
+            });
+
+
+
+
+
+        });
+
+    </script>
+</head>
+
+<body>
+    <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+    Launch demo modal
+  </button>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>

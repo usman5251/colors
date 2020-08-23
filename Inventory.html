@@ -26,11 +26,13 @@
             console.log('Error while syncing database')
             });
 
-            localDB.allDocs({include_docs: true}, function(err, docs) {
+            localDB.allDocs({include_docs: true, descending:true, skip : 1}, function(err, docs) {
             if (err) {
             return console.log(err);
             } else {
             liste = docs.rows;
+            console.log(liste.length)
+            //document.querySelector('#banner').innerHTML += `<div class="col-sm-2">Total Products in inventory ${liste.length}</div>`;
             console.log(liste)
                 for (var i = 0; i < liste.length; i++) {
                     console.log(liste[i].doc.name);
@@ -49,15 +51,19 @@
             // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
             // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
             var modal = $(this)
-            modal.find('.modal-title').text('New message to ' + barcode)
             document.querySelector('#addStockConfirm',).addEventListener('click', () => {
+              var quantity = document.querySelector('#addStock').value;
+              if (quantity == '') {
+                alert('Please enter stock quantity');
+                return;
+              }
               localDB.get(`${barcode}`).then(function(doc) {
                 return localDB.put({
                   _id : doc._id,
                   _rev : doc._rev,
                   name : doc.name,
                   sku : doc.sku,
-                  stock : parseInt(doc.stock) + 1,
+                  stock : parseInt(doc.stock) + parseInt(quantity),
                   color : doc.color,
                   cost: doc.cost,
                   price: doc.price,
@@ -66,7 +72,7 @@
                   size: doc.size
                 });
               }).then(function(response) {
-                // handle response
+                alert("Stock Added Successfully")
               }).catch(function (err) {
                 console.log(err);
               });
@@ -82,15 +88,19 @@
             // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
             // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
             var modal = $(this)
-            modal.find('.modal-title').text('New message to ' + barcode)
             document.querySelector('#minusStockConfirm',).addEventListener('click', () => {
+              var quantity = document.querySelector('#minusStock').value;
+              if (quantity == '') {
+                alert('Please enter stock quantity');
+                return;
+              }
               localDB.get(`${barcode}`).then(function(doc) {
                 return localDB.put({
                   _id : doc._id,
                   _rev : doc._rev,
                   name : doc.name,
                   sku : doc.sku,
-                  stock : parseInt(doc.stock) - 1,
+                  stock : parseInt(doc.stock) - parseInt(quantity),
                   color : doc.color,
                   cost: doc.cost,
                   price: doc.price,
@@ -99,7 +109,7 @@
                   size: doc.size
             });
           }).then(function(response) {
-                // handle response
+            alert("Stock Subtracted Successfully")
               }).catch(function (err) {
                 console.log(err);
               });
@@ -115,13 +125,12 @@
             // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
             // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
             var modal = $(this)
-            modal.find('.modal-title').text('New message to ' + barcode)
             document.querySelector('#deleteProductConfirm',).addEventListener('click', () => {
                 localDB.get(`${barcode}`).then(function (doc) {
                 return localDB.remove(doc._id, doc._rev);
                 
               }).then(function(response) {
-                // handle response
+                alert("product Deleted successfully")
               }).catch(function (err) {
                 console.log(err);
               });
@@ -131,9 +140,67 @@
             });
           });
 
-            
-            
-      });
+          $('#AddNewProductModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var barcode = button.data('value') // Extract info from data-* attributes
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var modal = $(this)
+            document.querySelector('#barcode').value = (new Date()).getTime();
+
+            //custom field
+            ele = document.querySelector('#size');
+            ele.addEventListener('change', () => {
+                if (ele.value == 'Custom') {
+                    document.querySelector('#customsize').style.display = 'flex';
+                } else {
+                    document.querySelector('#customsize').style.display = 'none';
+                }
+            });
+            document.querySelector('#AddNewProductConfirm',).addEventListener('click', () => {
+              var barcode = document.querySelector('#barcode').value;
+                var name = document.querySelector('#pname').value;
+                var sku = document.querySelector('#sku').value;
+                var stock = document.querySelector('#stock').value;
+                var color = document.querySelector('#color').value;
+                var cost = document.querySelector('#cost').value;
+                var price = document.querySelector('#saleprice').value;
+                if (document.querySelector('#size').value == 'Custom') {
+                    var size = document.querySelector('#customsizeval').value;
+                } else {
+                    var size = document.querySelector('#size').value;
+                }
+                if (barcode == '' || name == '' || sku == '' || stock == '' || color == '' || cost == '' || price == '' || size == '') {
+                    alert("fiends can not be empty");
+                    return;
+                }
+                var doc = {
+                "_id": `${barcode}`,
+                "name": `${name}`,
+                "sku": `${sku}`,
+                "stock": `${stock}`,
+                "color": `${color}`,
+                "cost": `${cost}`,
+                "price": `${price}`,
+                "totalsold": 0,
+                "dateadded": `${date}`,
+                "size": `${size}`
+                };
+                console.log(doc);
+                try {
+                    localDB.put(doc);
+                    alert("product added successfully")
+                }
+                catch(err) {
+                    alert("error during product update")
+                }
+                setTimeout(function () {
+                location.reload(true);
+              }, 500); 
+            });
+            });
+          });
+
     </script>
 </head>
 
@@ -150,9 +217,6 @@
                   <a class="nav-link" href="#">Dashboard <span class="sr-only">disabled</span></a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="add.html">Add stock</a>
-                </li>
-                <li class="nav-item">
                   <a class="nav-link" href="#">Inventory</a>
                 </li>
                 <li class="nav-item">
@@ -164,9 +228,9 @@
     </div>
 
     <div class="container" style="padding-bottom: 10px;">
-      <div class="row justify-content-end">
-        <div class="col-sm-2">
-          <a class="btn btn-primary" href="add.html" role="button">Add Product</a>
+      <div class="row justify-content-end" id="banner">
+        <div class="col-sm-2 text-right">
+          <button class="btn" data-toggle="modal" data-target="#AddNewProductModal" data-value="${barcode}">Add Product</button>
         </div>
       </div>
     </div>
@@ -193,7 +257,7 @@
         </div>
     </div>
 
-<!-- Modal -->
+<!-- Add Stock Modal -->
 <div class="modal fade" id="addmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -207,7 +271,7 @@
         <div class="form-group row">
           <label for="addstock" class="col-sm-2 col-form-label">Add Stock</label>
           <div class="col">
-          <input type="number" class="form-control" id="addstock" placeholder="Enter stock to add">
+          <input type="number" class="form-control" id="addStock" placeholder="Enter stock to add">
           </div>
       </div>
       </div>
@@ -220,7 +284,7 @@
 </div>
 
 
-<!-- Modal -->
+<!-- Minus Stock Modal -->
 <div class="modal fade" id="minusmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -234,7 +298,7 @@
           <div class="form-group row">
             <label for="minusstock" class="col-sm-2 col-form-label">Subtract Stock</label>
             <div class="col">
-            <input type="number" class="form-control" id="minusstock" placeholder="Enter stock to subtract">
+            <input type="number" class="form-control" id="minusStock" placeholder="Enter stock to subtract">
             </div>
         </div>
       </div>
@@ -246,7 +310,7 @@
   </div>
 </div>
 
-<!-- Modal -->
+<!-- Delete Product Modal -->
 <div class="modal fade" id="deletemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -262,6 +326,110 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
         <button type="button" class="btn btn-primary" id='deleteProductConfirm'>Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Add Product Modal -->
+<div class="modal fade" id="AddNewProductModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete Product</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="row align-items-center">
+              <div class="col">
+                  <form id='addform'> 
+                      <div class="form-group row">
+                          <label for="inputEmail3" class="col-sm-2 col-form-label">Barcode</label>
+                          <div class="col">
+                              <input type="number" class="form-control" id="barcode" placeholder="Barcode">
+                          </div>
+                      </div>
+                      <div class="form-group row">
+                      <label for="inputEmail3" class="col-sm-2 col-form-label">Name</label>
+                      <div class="col">
+                          <input type="text" class="form-control" id="pname" placeholder="Name">
+                      </div>
+                      </div>
+                      <div class="form-group row">
+                      <label for="inputPassword3" class="col-sm-2 col-form-label">SKU</label>
+                      <div class="col">
+                          <input type="text" class="form-control" id="sku" placeholder="SKU">
+                      </div>
+                      </div>
+                      <div class="form-group row">
+                          <label for="inputPassword3" class="col-sm-2 col-form-label">Stock</label>
+                          <div class="col">
+                          <input type="number" class="form-control" id="stock" placeholder="Enter stock">
+                          </div>
+                      </div>
+                      <div class="form-group row" >
+                          <label for="color" class="col-sm-2 col-form-label">Select color</label>
+                          <div class="col">
+                          <select class="form-control" id="color" >
+                            <option>Red</option>
+                            <option>Blue</option>
+                            <option>Green</option>
+                            <option>Yellow</option>
+                            <option>Purple</option>
+                            <option>Maroon</option>
+                            <option>White</option>
+                            <option>Seagreen</option>
+                            <option>Multi</option>
+                            <option>Brown</option>
+                            <option>Fawn</option>
+                            <option>Pink</option>
+                            <option>Navy Blue</option>
+                            <option>Gray</option>
+                            <option>Black</option>
+  
+                          </select>
+                          </div>
+                      </div>
+                      <div class="form-group row" >
+                          <label for="color" class="col-sm-2 col-form-label">Select size</label>
+                          <div class="col">
+                          <select class="form-control" id="size" >
+                            <option>Small</option>
+                            <option>Medium</option>
+                            <option>Large</option>
+                            <option>XL</option>
+                            <option>Custom</option>
+                          </select>
+                          </div>
+                      </div>
+                      <div class="form-group row" id="customsize" style="display: none;">
+                          <label for="inputPassword3" class="col-sm-2 col-form-label">Custom size</label>
+                          <div class="col">
+                          <input type="text" class="form-control" id="customsizeval" placeholder="Custom size">
+                          </div>
+                      </div>
+                      <div class="form-group row">
+                          <label for="inputPassword3" class="col-sm-2 col-form-label">Cost</label>
+                          <div class="col">
+                          <input type="number" class="form-control" id="cost" placeholder="Cost Price">
+                          </div>
+                      </div>
+                      <div class="form-group row">
+                          <label for="inputPassword3" class="col-sm-2 col-form-label">Sale Price</label>
+                          <div class="col">
+                          <input type="number" class="form-control" id="saleprice" placeholder="Price">
+                          </div>
+                      </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id='AddNewProductConfirm'>Add Product</button>
       </div>
     </div>
   </div>

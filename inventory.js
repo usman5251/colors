@@ -12,7 +12,7 @@ window.addEventListener('DOMContentLoaded', () => {
     console.log('Error while syncing database')
     });
 
-    localDB.allDocs({include_docs: true, descending:true, skip : 1}, function(err, docs) {
+    localDB.allDocs({include_docs: true, descending:true, skip : 3}, function(err, docs) {
     if (err) {
     return console.log(err);
     } else {
@@ -22,10 +22,13 @@ window.addEventListener('DOMContentLoaded', () => {
     console.log(liste)
         for (var i = 0; i < liste.length; i++) {
             console.log(liste[i].doc.name);
-            name = liste[i].doc.name;
+            category = liste[i].doc.category;
             barcode = liste[i].id;
             stock = liste[i].doc.stock;
-            var table = `<tr><th scope="row">${i+1}</th><td>${barcode}</td><td>${name}</td><td>${stock}</td><td><button class="btn" data-toggle="modal" data-target="#addmodal" data-value="${barcode}"><i class="fa fa-plus"></i></button> <button class="btn" data-toggle="modal" data-target="#minusmodal" data-value="${barcode}"><i class="fa fa-minus"></i></button> <button class="btn" data-toggle="modal" data-target="#deletemodal" data-value="${barcode}"><i class="fa fa-trash"></i></button></td></tr>`;
+            sku = liste[i].doc.sku;
+            color = liste[i].doc.color;
+            size = liste[i].doc.size;
+            var table = `<tr><th scope="row">${i+1}</th><td>${barcode}</td><td>${category}</td><td>${sku}</td><td>${size}</td><td>${color}</td><td>${stock}</td><td><button class="btn" data-toggle="modal" data-target="#addmodal" data-value="${barcode}"><i class="fa fa-plus"></i></button> <button class="btn" data-toggle="modal" data-target="#minusmodal" data-value="${barcode}"><i class="fa fa-minus"></i></button> <button class="btn" data-toggle="modal" data-target="#deletemodal" data-value="${barcode}"><i class="fa fa-trash"></i></button></td></tr>`;
             document.querySelector('#details').innerHTML += table;
         }
     }
@@ -145,7 +148,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
     document.querySelector('#AddNewProductConfirm',).addEventListener('click', () => {
       var barcode = document.querySelector('#barcode').value;
-        var name = document.querySelector('#pname').value;
+        var category = document.querySelector('#category').value;
         var sku = document.querySelector('#sku').value;
         var stock = document.querySelector('#stock').value;
         var color = document.querySelector('#color').value;
@@ -156,13 +159,13 @@ window.addEventListener('DOMContentLoaded', () => {
         } else {
             var size = document.querySelector('#size').value;
         }
-        if (barcode == '' || name == '' || sku == '' || stock == '' || color == '' || cost == '' || price == '' || size == '') {
+        if (barcode == '' || category == '' || sku == '' || stock == '' || color == '' || cost == '' || price == '' || size == '') {
             alert("Invalid product description");
             return;
         }
         var doc = {
         "_id": `${barcode}`,
-        "name": `${name}`,
+        "category": `${category}`,
         "sku": `${sku}`,
         "stock": `${stock}`,
         "color": `${color}`,

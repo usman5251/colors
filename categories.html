@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- PouchDB -->
+    <script src="pouchdb-7.2.1.js"></script>
+
+    <script>
+    window.addEventListener('DOMContentLoaded', () => {
+    //sync databases
+    var localDB = new PouchDB('colors');
+    var remoteDB = new PouchDB('http://ec2-3-85-5-117.compute-1.amazonaws.com:5984/colors');
+    localDB.sync(remoteDB).on('complete', function () {
+    console.log('Yay, we are in sync!')
+    }).on('error', function (err) {
+    console.log('Error while syncing database')
+    });
+
+    localDB.get('categories').then(function (doc) {
+    var cats = JSON.parse(doc.categories);
+    console.log(JSON.parse(doc.categories));
+    for (var key in cats) {
+    if (cats.hasOwnProperty(key)) {
+        var val = cats[key];
+        console.log(cats[key])
+        if (val.status == 'enabled') {
+            document.querySelector('#category').innerHTML += `<option>${val.title}</option>`;
+        }
+        console.log(val.title);
+    }}
+    }).catch(function (err) {
+    console.log(err);
+    });
+    document.querySelector('#add').addEventListener('click', () => {
+        var bool = false;
+        var newcat = document.querySelector('#newcat').value;
+        localDB.get('categories').then(function (doc) {
+            var cats = JSON.parse(doc.categories);
+            for (var key in cats) {
+                if (cats.hasOwnProperty(key)) {
+                    var val = cats[key];
+                    if (val.status == 'enabled' && val.title == `${newcat}`) {
+                        alert('category already added');
+                        console.log('enabled');
+                        bool = true;
+                    } else if (val.status == 'dissabled' && val.title == `${newcat}`)  {
+                        val.status = 'enabled';
+                        console.log('enabled');
+                        catsjson = JSON.stringify(cats, null, 4);
+                        localDB.get(`categories`).then(function(doc) {
+                            return localDB.put({
+                                _id : doc._id,
+                                _rev : doc._rev,
+                                categories : `${catsjson}`
+                            });
+                        }).then(function(response) {
+                            alert("Category Added Successfully");
+                        }).catch(function (err) {
+                            console.log(err);
+                        });
+                        setTimeout(function () {
+                            location.reload(true);
+                        }, 500);
+                    }
+                }
+            }
+            if (bool == false) {
+                dt = newcat;
+                newobj = {
+                    "title" : `${newcat}`,
+                    "status" : "enabled"
+                }
+                cats[`${dt}`] = newobj
+                
+                catsjson = JSON.stringify(cats, null, 4);
+                localDB.get(`categories`).then(function(doc) {
+                    return localDB.put({
+                        _id : doc._id,
+                        _rev : doc._rev,
+                        categories : `${catsjson}`
+                    });
+                }).then(function(response) {
+                    alert("Category Added Successfully");
+                }).catch(function (err) {
+                    console.log(err);
+                });
+                setTimeout(function () {
+                    location.reload(true);
+                }, 500);
+            }
+        });
+        
+    });
+
+
+        document.querySelector('#delete').addEventListener('click', () => {
+            
+        var newcat = document.querySelector('#newcat').value;
+        localDB.get('categories').then(function (doc) {
+            var cats = JSON.parse(doc.categories.replace("\"",'"'));
+            console.log(doc.categories)
+            for (var key in cats) {
+                if (cats.hasOwnProperty(key)) {
+                    var val = cats[key];
+                    if (val.status == 'disabled' && val.title == `${newcat}`) {
+                        alert('Nothing to delete');
+                    } else if (val.status == 'enabled' && val.title == `${newcat}`)  {
+                        val.status = 'disabled';
+                        delete cats[`${newcat}`];
+                        console.log(cats.netcat);
+                        catsjson = JSON.stringify(cats, null, 4);
+                        console.log(cats);
+                        catsjson = JSON.stringify(cats, null, 4);
+                        console.log(cats);
+                        localDB.get(`categories`).then(function(doc) {
+                            return localDB.put({
+                                _id : doc._id,
+                                _rev : doc._rev,
+                                categories : `${catsjson}`
+                            });
+                        }).then(function(response) {
+                            alert("Category Deleted Successfully");
+                        }).catch(function (err) {
+                            console.log(err);
+                        });
+                        setTimeout(function () {
+                            location.reload(true);
+                        }, 500);
+                    }
+                }
+            }
+        });
+    });
+});
+    </script>
+</head>
+
+<body>
+    <div class="form-group row" >
+        <label for="category" class="col-sm-2 col-form-label">Category</label>
+        <div class="col">
+        <select class="form-control" id="category" >
+        <input type="text" id="newcat">
+        <button id="add">add</button>
+        <button id="delete">del</button>
+        </select>
+        </div>
+    </div>
+
+
+
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>

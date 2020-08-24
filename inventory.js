@@ -116,7 +116,7 @@ window.addEventListener('DOMContentLoaded', () => {
         return localDB.remove(doc._id, doc._rev);
         
       }).then(function(response) {
-        alert("product Deleted successfully")
+        alert("Product Deleted successfully")
       }).catch(function (err) {
         console.log(err);
       });

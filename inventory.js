@@ -298,7 +298,7 @@ window.addEventListener('DOMContentLoaded', () => {
       } else {
         var newSize = document.querySelector('#sizeUpdate').value;
       }
-      if (barcode == '' || category == '' || sku == '' || color == '' || cost == '' || price == '' || newSize == '') {
+      if (document.querySelector('#barcodeUpdate').value = barcode == '' || document.querySelector('#categoryUpdate').value == '' || document.querySelector('#skuUpdate').value == '' || document.querySelector('#colorUpdate').value == '' || document.querySelector('#costUpdate').value == '' || document.querySelector('#salepriceUpdate').value == '' || newSize == '') {
         alert("Invalid product description");
         return;
       }

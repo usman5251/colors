@@ -45,22 +45,24 @@
   <div class="container" style="padding-bottom: 10px;">
     <div class="row justify-content-center" id="banner">
       <div class="col-sm-2 text-right">
-        <button class="btn" data-toggle="modal" data-target="#AddNewProductModal" data-value="${barcode}">Add Product</button>
+        <button class="btn btn-info" data-toggle="modal" data-target="#AddNewProductModal" data-value="${barcode}">Add Product</button>
       </div>
       <div class="col-sm-2 text-right">
-        <button class="btn" data-toggle="modal" data-target="#addCategory" data-value="${barcode}">Add Category</button>
+        <button class="btn btn-info" data-toggle="modal" data-target="#addCategory" data-value="${barcode}">Add Category</button>
       </div>
       <div class="col-sm-2 text-right">
-        <button class="btn" data-toggle="modal" data-target="#deleteCategory" data-value="${barcode}">Remove Category</button>
+        <button class="btn btn-info" data-toggle="modal" data-target="#deleteCategory" data-value="${barcode}">Remove Category</button>
       </div>
       <div class="col-sm-2 text-right">
-        <button class="btn" data-toggle="modal" data-target="#addColors" data-value="${barcode}">Add Colors</button>
+        <button class="btn btn-info" data-toggle="modal" data-target="#addColors" data-value="${barcode}">Add Colors</button>
       </div>
       <div class="col-sm-2 text-right">
-        <button class="btn" data-toggle="modal" data-target="#deleteColors" data-value="${barcode}">Remove Colors</button>
+        <button class="btn btn-info" data-toggle="modal" data-target="#deleteColors" data-value="${barcode}">Remove Colors</button>
       </div>
       <div class="col-sm-2 text-right">
-        <input type="text" style="margin-top: 4px;" id="search">
+        <div class="form-group">
+          <input type="password" class="form-control" id="search">
+        </div>
       </div>
     </div>
   </div>

@@ -14,7 +14,7 @@ window.addEventListener('DOMContentLoaded', () => {
     console.log('Error while syncing database')
     });
 
-    localDB.allDocs({include_docs: true, descending:true, skip : 1}, function(err, docs) {
+    localDB.allDocs({include_docs: true, descending:true, skip : 3}, function(err, docs) {
     if (err) {
     return console.log(err);
     } else {

@@ -19,7 +19,7 @@ window.addEventListener('DOMContentLoaded', () => {
     liste = docs.rows;
     console.log(liste.length)
     //document.querySelector('#banner').innerHTML += `<div class="col-sm-2">Total Products in inventory ${liste.length}</div>`;
-    console.log(liste)
+    //console.log(liste)
         for (var i = 0; i < liste.length; i++) {
             console.log(liste[i].doc.name);
             category = liste[i].doc.category;
@@ -36,7 +36,7 @@ window.addEventListener('DOMContentLoaded', () => {
     $('#addmodal').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget) // Button that triggered the modal
     var barcode = button.data('value') // Extract info from data-* attributes
-    console.log(barcode);
+    //console.log(barcode);
     // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
     // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
     var modal = $(this)
@@ -73,7 +73,7 @@ window.addEventListener('DOMContentLoaded', () => {
     $('#minusmodal').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget) // Button that triggered the modal
     var barcode = button.data('value') // Extract info from data-* attributes
-    console.log(barcode);
+    //console.log(barcode);
     // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
     // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
     var modal = $(this)
@@ -178,14 +178,65 @@ window.addEventListener('DOMContentLoaded', () => {
         console.log(doc);
         try {
             localDB.put(doc);
-            alert("product added successfully")
+            alert("Product added successfully")
         }
         catch(err) {
-            alert("error during product update")
+            alert("Error during product update")
         }
         setTimeout(function () {
         location.reload(true);
       }, 500); 
     });
+    });
+    searchitem = document.querySelector('#search');
+    searchitem.addEventListener('keypress', function (e) {
+      if (e.key === 'Enter'){
+        if (searchitem.value != ''){
+        var table = document.querySelector('#details');
+        var child = table.lastElementChild;
+        while (child) { 
+          table.removeChild(child); 
+          child = table.lastElementChild; 
+      }
+      for (var i = 0; i < liste.length; i++) {
+        a = searchitem.value;
+        category = liste[i].doc.category;
+        barcode = liste[i].id;
+        stock = liste[i].doc.stock;
+        sku = liste[i].doc.sku;
+        color = liste[i].doc.color;
+        size = liste[i].doc.size;
+        //console.log(barcode,sku,category,stock,color,size)
+        if (barcode.toString().toLowerCase() == a.toString().toLowerCase() || sku.toString().toLowerCase() == a.toString().toLowerCase() || category.toString().toLowerCase() == a.toString().toLowerCase() || color.toString().toLowerCase() == a.toString().toLowerCase() || size.toString().toLowerCase() == a.toString().toLowerCase() || stock.toString().toLowerCase() == a.toString().toLowerCase()) {
+          var table = `<tr><th scope="row">${i+1}</th><td>${barcode}</td><td>${category}</td><td>${sku}</td><td>${size}</td><td>${color}</td><td>${stock}</td><td><button class="btn" data-toggle="modal" data-target="#addmodal" data-value="${barcode}"><i class="fa fa-plus"></i></button> <button class="btn" data-toggle="modal" data-target="#minusmodal" data-value="${barcode}"><i class="fa fa-minus"></i></button> <button class="btn" data-toggle="modal" data-target="#deletemodal" data-value="${barcode}"><i class="fa fa-trash"></i></button></td></tr>`;
+          document.querySelector('#details').innerHTML += table;
+        }
+        
+      }
+    }
+  }
+    });
+
+    searchitem.addEventListener('keyup', () => {
+      //console.log('26')
+      if (searchitem.value == '') {
+        var table = document.querySelector('#details');
+        var child = table.lastElementChild;
+        while (child) { 
+          table.removeChild(child); 
+          child = table.lastElementChild; 
+      }
+        for (var i = 0; i < liste.length; i++) {
+          console.log(liste[i].doc.name);
+          category = liste[i].doc.category;
+          barcode = liste[i].id;
+          stock = liste[i].doc.stock;
+          sku = liste[i].doc.sku;
+          color = liste[i].doc.color;
+          size = liste[i].doc.size;
+          var table = `<tr><th scope="row">${i+1}</th><td>${barcode}</td><td>${category}</td><td>${sku}</td><td>${size}</td><td>${color}</td><td>${stock}</td><td><button class="btn" data-toggle="modal" data-target="#addmodal" data-value="${barcode}"><i class="fa fa-plus"></i></button> <button class="btn" data-toggle="modal" data-target="#minusmodal" data-value="${barcode}"><i class="fa fa-minus"></i></button> <button class="btn" data-toggle="modal" data-target="#deletemodal" data-value="${barcode}"><i class="fa fa-trash"></i></button></td></tr>`;
+          document.querySelector('#details').innerHTML += table;
+      }
+      }
     });
   });

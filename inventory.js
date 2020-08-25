@@ -43,7 +43,8 @@ window.addEventListener('DOMContentLoaded', () => {
         sku = liste[i].doc.sku;
         color = liste[i].doc.color;
         size = liste[i].doc.size;
-        var table = `<tr><th scope="row">${i + 1}</th><td>${barcode}</td><td>${category}</td><td>${sku}</td><td>${size}</td><td>${color}</td><td>${stock}</td><td><button class="btn" data-toggle="modal" data-target="#addmodal" data-value="${barcode}"><i class="fa fa-plus"></i></button> <button class="btn" data-toggle="modal" data-target="#minusmodal" data-value="${barcode}"><i class="fa fa-minus"></i></button> <button class="btn" data-toggle="modal" data-target="#deletemodal" data-value="${barcode}"><i class="fa fa-trash"></i></button> <button class="btn" data-toggle="modal" data-target="#updateProductModal" data-value="${barcode}"><i class="fa fa-pencil"></i></button></td></tr>`;
+        price = liste[i].doc.price;
+        var table = `<tr><th scope="row">${i + 1}</th><td>${barcode}</td><td>${category}</td><td>${sku}</td><td>${size}</td><td>${color}</td><td>${stock}</td><td>${price}</td><td><button class="btn" data-toggle="modal" data-target="#addmodal" data-value="${barcode}"><i class="fa fa-plus"></i></button> <button class="btn" data-toggle="modal" data-target="#minusmodal" data-value="${barcode}"><i class="fa fa-minus"></i></button> <button class="btn" data-toggle="modal" data-target="#deletemodal" data-value="${barcode}"><i class="fa fa-trash"></i></button> <button class="btn" data-toggle="modal" data-target="#updateProductModal" data-value="${barcode}"><i class="fa fa-pencil"></i></button></td></tr>`;
         document.querySelector('#details').innerHTML += table;
       }
     }
@@ -221,9 +222,10 @@ window.addEventListener('DOMContentLoaded', () => {
           sku = liste[i].doc.sku;
           color = liste[i].doc.color;
           size = liste[i].doc.size;
+          price = liste[i].doc.price;
           //console.log(barcode,sku,category,stock,color,size)
           if (barcode.toString().toLowerCase() == a.toString().toLowerCase() || sku.toString().toLowerCase() == a.toString().toLowerCase() || category.toString().toLowerCase() == a.toString().toLowerCase() || color.toString().toLowerCase() == a.toString().toLowerCase() || size.toString().toLowerCase() == a.toString().toLowerCase() || stock.toString().toLowerCase() == a.toString().toLowerCase()) {
-            var table = `<tr><th scope="row">${i + 1}</th><td>${barcode}</td><td>${category}</td><td>${sku}</td><td>${size}</td><td>${color}</td><td>${stock}</td><td><button class="btn" data-toggle="modal" data-target="#addmodal" data-value="${barcode}"><i class="fa fa-plus"></i></button> <button class="btn" data-toggle="modal" data-target="#minusmodal" data-value="${barcode}"><i class="fa fa-minus"></i></button> <button class="btn" data-toggle="modal" data-target="#deletemodal" data-value="${barcode}"><i class="fa fa-trash"></i></button></button> <button class="btn" data-toggle="modal" data-target="#updateProductModal" data-value="${barcode}"><i class="fa fa-pencil"></i></button></td></tr>`;
+            var table = `<tr><th scope="row">${i + 1}</th><td>${barcode}</td><td>${category}</td><td>${sku}</td><td>${size}</td><td>${color}</td><td>${stock}</td><td>${price}</td><td><button class="btn" data-toggle="modal" data-target="#addmodal" data-value="${barcode}"><i class="fa fa-plus"></i></button> <button class="btn" data-toggle="modal" data-target="#minusmodal" data-value="${barcode}"><i class="fa fa-minus"></i></button> <button class="btn" data-toggle="modal" data-target="#deletemodal" data-value="${barcode}"><i class="fa fa-trash"></i></button></button> <button class="btn" data-toggle="modal" data-target="#updateProductModal" data-value="${barcode}"><i class="fa fa-pencil"></i></button></td></tr>`;
             document.querySelector('#details').innerHTML += table;
           }
 
@@ -249,7 +251,8 @@ window.addEventListener('DOMContentLoaded', () => {
         sku = liste[i].doc.sku;
         color = liste[i].doc.color;
         size = liste[i].doc.size;
-        var table = `<tr><th scope="row">${i + 1}</th><td>${barcode}</td><td>${category}</td><td>${sku}</td><td>${size}</td><td>${color}</td><td>${stock}</td><td><button class="btn" data-toggle="modal" data-target="#addmodal" data-value="${barcode}"><i class="fa fa-plus"></i></button> <button class="btn" data-toggle="modal" data-target="#minusmodal" data-value="${barcode}"><i class="fa fa-minus"></i></button> <button class="btn" data-toggle="modal" data-target="#deletemodal" data-value="${barcode}"><i class="fa fa-trash"></i></button></button> <button class="btn" data-toggle="modal" data-target="#updateProductModal" data-value="${barcode}"><i class="fa fa-pencil"></i></button></td></tr>`;
+        price = liste[i].doc.price;
+        var table = `<tr><th scope="row">${i + 1}</th><td>${barcode}</td><td>${category}</td><td>${sku}</td><td>${size}</td><td>${color}</td><td>${stock}</td><td>${price}</td><td><button class="btn" data-toggle="modal" data-target="#addmodal" data-value="${barcode}"><i class="fa fa-plus"></i></button> <button class="btn" data-toggle="modal" data-target="#minusmodal" data-value="${barcode}"><i class="fa fa-minus"></i></button> <button class="btn" data-toggle="modal" data-target="#deletemodal" data-value="${barcode}"><i class="fa fa-trash"></i></button></button> <button class="btn" data-toggle="modal" data-target="#updateProductModal" data-value="${barcode}"><i class="fa fa-pencil"></i></button></td></tr>`;
         document.querySelector('#details').innerHTML += table;
       }
     }

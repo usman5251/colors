@@ -298,6 +298,10 @@ window.addEventListener('DOMContentLoaded', () => {
       } else {
         var newSize = document.querySelector('#sizeUpdate').value;
       }
+      if (barcode == '' || category == '' || sku == '' || color == '' || cost == '' || price == '' || newSize == '') {
+        alert("Invalid product description");
+        return;
+      }
       localDB.get(`${barcode}`).then(function (doc) {
         return localDB.put({
           _id: doc._id,

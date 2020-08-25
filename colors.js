@@ -17,6 +17,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 console.log(val)
                 document.querySelector('#colorsDeleteModal').innerHTML += `<option>${val.title}</option>`;
                 document.querySelector('#color').innerHTML += `<option>${val.title}</option>`;
+                document.querySelector('#colorUpdate').innerHTML += `<option>${val.title}</option>`;
                 console.log(val.title);
             }
         }

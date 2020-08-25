@@ -16,6 +16,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 var val = cats[key];
                 document.querySelector('#category').innerHTML += `<option>${val.title}</option>`;
                 document.querySelector('#categorymodal').innerHTML += `<option>${val.title}</option>`;
+                document.querySelector('#categoryUpdate').innerHTML += `<option>${val.title}</option>`;
                 console.log(val.title);
             }
         }

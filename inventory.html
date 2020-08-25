@@ -384,32 +384,32 @@ aria-hidden="true">
               <div class="form-group row">
                 <label for="inputEmail3" class="col-sm-2 col-form-label">Barcode</label>
                 <div class="col">
-                  <input type="number" class="form-control" id="barcode" placeholder="Barcode">
+                  <input type="number" class="form-control" id="barcodeUpdate" placeholder="Barcode" disabled>
                 </div>
               </div>
               <div class="form-group row">
                 <label for="inputEmail3" class="col-sm-2 col-form-label">Category</label>
                 <div class="col">
-                  <select class="form-control" id="category"></select>
+                  <select class="form-control" id="categoryUpdate"></select>
                 </div>
               </div>
               <div class="form-group row">
                 <label for="inputPassword3" class="col-sm-2 col-form-label">SKU</label>
                 <div class="col">
-                  <input type="text" class="form-control" id="sku" placeholder="SKU">
+                  <input type="text" class="form-control" id="skuUpdate" placeholder="SKU">
                 </div>
               </div>
               <div class="form-group row">
                 <label for="color" class="col-sm-2 col-form-label">Color</label>
                 <div class="col">
-                  <select class="form-control" id="color">
+                  <select class="form-control" id="colorUpdate">
                   </select>
                 </div>
               </div>
               <div class="form-group row">
                 <label for="color" class="col-sm-2 col-form-label">Size</label>
                 <div class="col">
-                  <select class="form-control" id="size">
+                  <select class="form-control" id="sizeUpdate">
                     <option>Small</option>
                     <option>Medium</option>
                     <option>Large</option>
@@ -418,22 +418,22 @@ aria-hidden="true">
                   </select>
                 </div>
               </div>
-              <div class="form-group row" id="customsize" style="display: none;">
+              <div class="form-group row" id="customSizeDiv" style="display: none;">
                 <label for="inputPassword3" class="col-sm-2 col-form-label">Custom size</label>
                 <div class="col">
-                  <input type="text" class="form-control" id="customsizeval" placeholder="Custom size">
+                  <input type="text" class="form-control" id="customSizeUpdate" placeholder="Custom size">
                 </div>
               </div>
               <div class="form-group row">
                 <label for="inputPassword3" class="col-sm-2 col-form-label">Cost</label>
                 <div class="col">
-                  <input type="number" class="form-control" id="cost" placeholder="Cost Price">
+                  <input type="number" class="form-control" id="costUpdate" placeholder="Cost Price">
                 </div>
               </div>
               <div class="form-group row">
                 <label for="inputPassword3" class="col-sm-2 col-form-label">Price</label>
                 <div class="col">
-                  <input type="number" class="form-control" id="saleprice" placeholder="Price">
+                  <input type="number" class="form-control" id="salepriceUpdate" placeholder="Price">
                 </div>
               </div>
             </form>
@@ -443,7 +443,7 @@ aria-hidden="true">
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-      <button type="button" class="btn btn-primary" id='AddNewProductConfirm'>Add Product</button>
+      <button type="button" class="btn btn-primary" id='updateProductConfirm'>Update</button>
     </div>
   </div>
 </div>

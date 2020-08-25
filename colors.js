@@ -70,4 +70,45 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+    // DELETE
+    document.querySelector('#deleteColor').addEventListener('click', () => {
+        var bool = false;
+        var newcat = document.querySelector('#colorsDeleteModal').value;
+        localDB.get('ColorAttr').then(function (doc) {
+            var cats = JSON.parse(doc.colors.replace("\"", '"'));
+            console.log(doc.colors);
+            for (var key in cats) {
+                if (cats.hasOwnProperty(key)) {
+                    console.log('jh')
+                    var val = cats[key];
+                    if (val.title.toString().toLowerCase() == `${newcat.toString().toLowerCase()}`) {
+
+                        delete cats[`${val.title}`];
+                        catsjson = JSON.stringify(cats, null, 4);
+                        console.log(cats);
+                        localDB.get(`ColorAttr`).then(function (doc) {
+                            return localDB.put({
+                                _id: doc._id,
+                                _rev: doc._rev,
+                                colors: `${catsjson}`
+                            });
+                        }).then(function (response) {
+                            alert("Color Deleted Successfully");
+                        }).catch(function (err) {
+                            console.log(err);
+                        });
+                        bool = true;
+                        break;
+                    }
+                }
+            }
+            if (bool == false) {
+                alert('Color not found');
+            } else {
+                setTimeout(function () {
+                    location.reload(true);
+                }, 500);
+            }
+        });
+    });
 });
